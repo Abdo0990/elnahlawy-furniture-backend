@@ -1,6 +1,17 @@
 const { check } = require('express-validator');
 const validatorMiddleware = require('../middlewares/validatorMiddleware');
 
+const ALLOWED_CATEGORIES = [
+    'غرف نوم',
+    'غرف أطفال',
+    'ركن',
+    'سفرة',
+    'دواليب',
+    'سراير',
+    'مكاتب',
+    'جزامة',
+];
+
 exports.createProductValidator = [
     check('name')
         .trim()
@@ -34,8 +45,8 @@ exports.createProductValidator = [
         .trim()
         .notEmpty()
         .withMessage('فئة المنتج مطلوبة')
-        .isIn(['غرف نوم', 'صالونات', 'سفرة', 'مطابخ'])
-        .withMessage('الفئة المختارة غير صحيحة، يجب أن تكون (غرف نوم، صالونات، سفرة، مطابخ)'),
+        .isIn(ALLOWED_CATEGORIES)
+        .withMessage(`الفئة المختارة غير صحيحة، يجب أن تكون إحدى الفئات: (${ALLOWED_CATEGORIES.join('، ')})`),
 
     check('woodType')
         .trim()
@@ -102,8 +113,8 @@ exports.updateProductValidator = [
     check('category')
         .optional()
         .trim()
-        .isIn(['غرف نوم', 'صالونات', 'سفرة', 'مطابخ'])
-        .withMessage('الفئة المختارة غير صحيحة'),
+        .isIn(ALLOWED_CATEGORIES)
+        .withMessage(`الفئة المختارة غير صحيحة، يجب أن تكون إحدى الفئات: (${ALLOWED_CATEGORIES.join('، ')})`),
 
     check('woodType')
         .optional()

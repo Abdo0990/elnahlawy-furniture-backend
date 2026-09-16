@@ -2,6 +2,7 @@ const express = require('express');
 const {
     createOrder,
     getOrders,
+    getOrderStatusCounts,
     getOrder,
     updateOrderStatus,
     deleteOrder,
@@ -25,6 +26,7 @@ router.route('/').post(createOrderValidator, createOrder);
 router.use(protect, allowedTo('admin'));
 
 router.route('/').get(getOrders);
+router.get('/status-counts', getOrderStatusCounts);
 router
     .route('/:id')
     .get(getOrderValidator, getOrder)

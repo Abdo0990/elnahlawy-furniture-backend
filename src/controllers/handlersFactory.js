@@ -74,7 +74,10 @@ exports.getAll = (Model) =>
             filter = req.filterObj;
         }
 
-        const totalDocumentsCount = await Model.countDocuments(filter);
+        const countFeatures = new ApiFeatures(Model.find(filter), req.query)
+            .filter()
+            .search();
+        const totalDocumentsCount = await countFeatures.mongooseQuery.countDocuments();
 
         const apiFeatures = new ApiFeatures(Model.find(filter), req.query)
             .paginate(totalDocumentsCount)

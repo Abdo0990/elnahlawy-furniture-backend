@@ -24,7 +24,16 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: [true, 'فئة المنتج مطلوبة'],
             enum: {
-                values: ['غرف نوم', 'صالونات', 'سفرة', 'مطابخ'],
+                values: [
+                    'غرف نوم',
+                    'غرف أطفال',
+                    'ركن',
+                    'سفرة',
+                    'دواليب',
+                    'سراير',
+                    'مكاتب',
+                    'جزامة',
+                ],
                 message: '{VALUE} ليست فئة معتمدة',
             },
             trim: true,

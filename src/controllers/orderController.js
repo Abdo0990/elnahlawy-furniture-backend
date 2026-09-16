@@ -97,6 +97,29 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
 // @access  Private/Admin
 exports.getOrders = factory.getAll(Order);
 
+// @desc    جلب عدد الطلبات في كل حالة لواجهة الفلترة
+// @route   GET /api/v1/orders/status-counts
+// @access  Private/Admin
+exports.getOrderStatusCounts = asyncHandler(async (req, res) => {
+    const statuses = ['معلق', 'تم التواصل', 'قيد التنفيذ', 'تم التسليم', 'ملغي'];
+    const groupedCounts = await Order.aggregate([
+        { $group: { _id: '$status', count: { $sum: 1 } } },
+    ]);
+
+    const counts = Object.fromEntries(statuses.map((status) => [status, 0]));
+    groupedCounts.forEach(({ _id, count }) => {
+        if (Object.hasOwn(counts, _id)) counts[_id] = count;
+    });
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            total: groupedCounts.reduce((total, item) => total + item.count, 0),
+            counts,
+        },
+    });
+});
+
 // @desc    جلب تفاصيل طلب محدد
 // @route   GET /api/v1/orders/:id
 // @access  Private/Admin
